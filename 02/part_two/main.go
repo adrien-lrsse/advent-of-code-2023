@@ -1,4 +1,4 @@
-package main
+package part_two
 
 import (
 	"bufio"
@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func parsing(line string) int {
@@ -44,8 +45,6 @@ func mathcingColor(integers []int, strings []string) int {
 	green := 0
 	blue := 0
 
-	fmt.Println(strings, integers)
-
 	for i := 0; i < len(integers); i++ {
 		switch strings[i] {
 		case "red":
@@ -66,9 +65,9 @@ func mathcingColor(integers []int, strings []string) int {
 	return blue * red * green
 }
 
-func main() {
+func Part_Two() {
 
-	file, err := os.Open("input.txt")
+	file, err := os.Open("part_two/input.txt")
 	if err != nil {
 		fmt.Println("Error opening file :", err)
 		return
@@ -78,12 +77,13 @@ func main() {
 	scanner := bufio.NewScanner(file)
 
 	result := 0
-
+	start := time.Now()
 	for scanner.Scan() {
 		line := scanner.Text()
 
 		result += parsing(line)
 	}
-	fmt.Println(result)
+	fmt.Println("Part 2: ", result)
+	fmt.Println(time.Since(start))
 
 }
