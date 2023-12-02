@@ -6,7 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func parsing(line string) int {
@@ -77,13 +76,13 @@ func Part_Two() {
 	scanner := bufio.NewScanner(file)
 
 	result := 0
-	start := time.Now()
+	// start := time.Now()
 	for scanner.Scan() {
 		line := scanner.Text()
 
 		result += parsing(line)
 	}
-	fmt.Println("Part 2: ", result)
-	fmt.Println(time.Since(start))
+	// fmt.Println("Part 2: ", result)
+	// fmt.Println(time.Since(start))
 
 }
