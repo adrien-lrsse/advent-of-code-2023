@@ -78,34 +78,35 @@ func findValueOfIntervals(destination int, source int, length int, interval []in
 	isChange := false
 
 	switch {
-	case intervalSource[0] <= interval[0] && intervalSource[1] >= interval[1]: // milieu et milieu
-		newInterval := []int{destination + (interval[0] - source), destination + (interval[1] - source)}
-		intervalDest = append(intervalDest, newInterval)
+	case interval[0] >= intervalSource[0] && interval[1] <= intervalSource[1]: // cas 1
+		intervalDest = append(intervalDest, []int{destination + (interval[0] - intervalSource[0]), destination + (interval[1] - intervalSource[0])})
 		isChange = true
-
-	case intervalSource[0] > interval[0] && intervalSource[1] < interval[1]: // avant et après
+	case interval[0] < intervalSource[0] && interval[1] <= intervalSource[1] && interval[1] >= intervalSource[0]: // cas 2
+		intervalDest = append(intervalDest, []int{destination, destination + (interval[1] - intervalSource[0])})
 		intervalDest = append(intervalDest, []int{interval[0], intervalSource[0] - 1})
-		intervalDest = append(intervalDest, []int{destination, destination + length - 1})
+		isChange = true
+	case interval[0] >= intervalSource[0] && interval[0] <= intervalSource[1] && interval[1] > intervalSource[1]: // cas 3
+		intervalDest = append(intervalDest, []int{destination + (interval[0] - intervalSource[0]), destination + length - 1})
 		intervalDest = append(intervalDest, []int{intervalSource[1] + 1, interval[1]})
 		isChange = true
-
-	case intervalSource[0] > interval[0] && interval[1] >= intervalSource[0] && interval[1] <= intervalSource[1]: // avant et mileu
-		newInterval := []int{destination, destination + (interval[1] - source)}
-		nonModifie := []int{interval[0], intervalSource[0] - 1}
-		intervalDest = append(intervalDest, newInterval, nonModifie)
+	case interval[0] < intervalSource[0] && interval[1] > intervalSource[1]:
+		intervalDest = append(intervalDest, []int{destination, destination + (intervalSource[1] - intervalSource[0])})
+		intervalDest = append(intervalDest, []int{interval[0], intervalSource[0] - 1})
+		intervalDest = append(intervalDest, []int{intervalSource[1] + 1, interval[1]})
 		isChange = true
-
-	case interval[0] >= intervalSource[0] && interval[0] <= intervalSource[1] && interval[1] > intervalSource[1]: // milieu et aprs
-		newInterval := []int{destination + (interval[0] - source), destination + length - 1}
-		nonModifie := []int{intervalSource[1] + 1, interval[1]}
-		intervalDest = append(intervalDest, newInterval, nonModifie)
-		isChange = true
-
 	default:
 		intervalDest = append(intervalDest, interval)
 	}
 
 	return intervalDest, isChange
+}
+
+func sanit(intervals [][]int) int {
+	ecart := 0
+	for i := 0; i < len(intervals); i++ {
+		ecart += intervals[i][1] - intervals[i][0] + 1
+	}
+	return ecart
 }
 
 func Part_Two() int {
@@ -115,6 +116,7 @@ func Part_Two() int {
 		return 0
 	}
 	defer file.Close()
+	var interval_from_map [][]int
 
 	scanner := bufio.NewScanner(file)
 	scanner.Scan()
@@ -134,61 +136,58 @@ func Part_Two() int {
 	seeds_intervals = append(seeds_intervals, interval2)
 
 	var isCheck []bool
-
-	len_inter := len(seeds_intervals)
-
-	isCheck = make([]bool, len_inter)
-
+	fmt.Println(sanit(seeds_intervals), seeds_intervals)
+	for i := 0; i < len(seeds_intervals); i++ {
+		isCheck = append(isCheck, false)
+	}
 	for scanner.Scan() {
-		line = scanner.Text()
 
+		line = scanner.Text()
 		if len(strings.TrimSpace(line)) == 0 {
-			len_inter = len(seeds_intervals)
-			isCheck = make([]bool, len_inter)
-			for i := 0; i < len(isCheck); i++ {
-				isCheck[i] = false
+			isCheck = []bool{}
+			for i := 0; i < len(seeds_intervals); i++ {
+				isCheck = append(isCheck, false)
 			}
 			continue
 		} else if !unicode.IsDigit(rune(line[0])) {
-			len_inter = len(seeds_intervals)
-			isCheck = make([]bool, len_inter)
-			for i := 0; i < len(isCheck); i++ {
-				isCheck[i] = false
+			isCheck = []bool{}
+			for i := 0; i < len(seeds_intervals); i++ {
+				isCheck = append(isCheck, false)
 			}
 			continue
 		} else {
 			map_i := parseMap(line)
-			i := 0
+			fmt.Println(sanit(seeds_intervals))
+
+			if len(seeds_intervals) == 0 {
+				continue
+			}
+			k := 0
 			for {
-				if i < len(seeds_intervals) {
-					fmt.Println(line, len(seeds_intervals))
-					if !isCheck[i] {
-						tabInter, isChange := findValueOfIntervals(map_i[0], map_i[1], map_i[2], seeds_intervals[i])
-						if isChange {
-							isCheck[i] = isChange
-							seeds_intervals[i] = tabInter[0]
-						}
-						for j := 1; j < len(tabInter); j++ {
-							seeds_intervals = append(seeds_intervals, tabInter[j])
+				if k < len(seeds_intervals) {
+					if !isCheck[k] {
+						interval_from_map, isCheck[k] = findValueOfIntervals(map_i[0], map_i[1], map_i[2], seeds_intervals[k])
+						seeds_intervals[k] = interval_from_map[0]
+						for j := 1; j < len(interval_from_map); j++ {
+							seeds_intervals = append(seeds_intervals, interval_from_map[j])
 							isCheck = append(isCheck, false)
 						}
 					}
-					i++
-					fmt.Println(isCheck, seeds_intervals)
+					k++
 				} else {
 					break
 				}
 
 			}
-
 		}
+
 	}
 
 	var test []int
-	test = append(test, 35)
-	test = append(test, 40)
+	test = append(test, 57)
+	test = append(test, 69)
 
-	fmt.Println(findValueOfIntervals(60, 40, 2, test))
+	fmt.Println(findValueOfIntervals(49, 53, 8, test))
 
 	fmt.Println(seeds_intervals, len(seeds_intervals))
 
