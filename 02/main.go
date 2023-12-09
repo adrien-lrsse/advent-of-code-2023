@@ -4,12 +4,15 @@ import (
 	"day2/part_one"
 	"day2/part_two"
 	"fmt"
+	"time"
 )
 
 func main() {
-	fmt.Println("Executing part1/main.go:")
-	part_one.Part_One()
+	debut := time.Now()
+	fmt.Println("Part One :")
+	fmt.Println("Result : ", part_one.Part_One(), " (in", time.Since(debut), ")")
+	debut = time.Now()
+	fmt.Println("Part Two :")
+	fmt.Println("Result : ", part_two.Part_Two(), "(in", time.Since(debut), ")")
 
-	fmt.Println("Executing part2/main.go:")
-	part_two.Part_Two()
 }

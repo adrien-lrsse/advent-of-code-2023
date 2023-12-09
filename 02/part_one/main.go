@@ -76,12 +76,12 @@ func mathcingColor(integers []int, strings []string) bool {
 	return true
 }
 
-func Part_One() {
+func Part_One() int {
 
 	file, err := os.Open("part_one/input.txt")
 	if err != nil {
 		fmt.Println("Error opening file :", err)
-		return
+		return 0
 	}
 	defer file.Close()
 
@@ -94,7 +94,6 @@ func Part_One() {
 
 		result += parsing(line)
 	}
-	// fmt.Println("Part 1: ", result)
-	// fmt.Println(time.Since(start))
+	return result
 
 }

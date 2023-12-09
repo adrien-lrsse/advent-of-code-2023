@@ -64,25 +64,23 @@ func mathcingColor(integers []int, strings []string) int {
 	return blue * red * green
 }
 
-func Part_Two() {
+func Part_Two() int {
 
 	file, err := os.Open("part_two/input.txt")
 	if err != nil {
 		fmt.Println("Error opening file :", err)
-		return
+		return 0
 	}
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 
 	result := 0
-	// start := time.Now()
 	for scanner.Scan() {
 		line := scanner.Text()
 
 		result += parsing(line)
 	}
-	// fmt.Println("Part 2: ", result)
-	// fmt.Println(time.Since(start))
+	return result
 
 }
