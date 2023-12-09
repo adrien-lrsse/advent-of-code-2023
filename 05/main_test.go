@@ -1,8 +1,8 @@
 package main
 
 import (
-	"day6/part_one"
-	"day6/part_two"
+	"day5/part_one"
+	"day5/part_two"
 	"testing"
 )
 

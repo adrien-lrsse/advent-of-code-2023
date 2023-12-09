@@ -101,12 +101,12 @@ func findValueOfIntervals(destination int, source int, length int, interval []in
 	return intervalDest, isChange
 }
 
-func sanit(intervals [][]int) int {
-	ecart := 0
-	for i := 0; i < len(intervals); i++ {
-		ecart += intervals[i][1] - intervals[i][0] + 1
+func createSeedsInterval(list []int) [][]int {
+	var seedsInterval [][]int
+	for i := 0; i < len(list)-1; i += 2 {
+		seedsInterval = append(seedsInterval, []int{list[i], list[i] + list[i+1] - 1})
 	}
-	return ecart
+	return seedsInterval
 }
 
 func Part_Two() int {
@@ -123,20 +123,9 @@ func Part_Two() int {
 	line := scanner.Text()
 	extracted_seeds := parseSeeds(line)
 
-	var seeds_intervals [][]int
-
-	var interval1 []int
-	interval1 = append(interval1, extracted_seeds[0])
-	interval1 = append(interval1, extracted_seeds[0]+extracted_seeds[1]-1)
-	var interval2 []int
-	interval2 = append(interval2, extracted_seeds[2])
-	interval2 = append(interval2, extracted_seeds[2]+extracted_seeds[3]-1)
-
-	seeds_intervals = append(seeds_intervals, interval1)
-	seeds_intervals = append(seeds_intervals, interval2)
+	seeds_intervals := createSeedsInterval(extracted_seeds)
 
 	var isCheck []bool
-	fmt.Println(sanit(seeds_intervals), seeds_intervals)
 	for i := 0; i < len(seeds_intervals); i++ {
 		isCheck = append(isCheck, false)
 	}
@@ -157,7 +146,6 @@ func Part_Two() int {
 			continue
 		} else {
 			map_i := parseMap(line)
-			fmt.Println(sanit(seeds_intervals))
 
 			if len(seeds_intervals) == 0 {
 				continue
@@ -180,16 +168,7 @@ func Part_Two() int {
 
 			}
 		}
-
 	}
-
-	var test []int
-	test = append(test, 57)
-	test = append(test, 69)
-
-	fmt.Println(findValueOfIntervals(49, 53, 8, test))
-
-	fmt.Println(seeds_intervals, len(seeds_intervals))
 
 	return findMin(seeds_intervals)
 }
