@@ -1,4 +1,4 @@
-package main
+package part_one
 
 import (
 	"bufio"
@@ -28,11 +28,11 @@ func findLastDigit(word string) int {
 	return -1
 }
 
-func main() {
-	file, err := os.Open("input.txt")
+func Part_One() int {
+	file, err := os.Open("part_one/input.txt")
 	if err != nil {
 		fmt.Println("Error opening file :", err)
-		return
+		return 0
 	}
 	defer file.Close()
 
@@ -44,5 +44,5 @@ func main() {
 		line := scanner.Text()
 		result += findFirstDigit(line)*10 + findLastDigit(line)
 	}
-	fmt.Println(result)
+	return result
 }

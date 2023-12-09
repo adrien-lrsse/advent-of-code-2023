@@ -1,4 +1,4 @@
-package main
+package part_two
 
 import (
 	"bufio"
@@ -163,16 +163,16 @@ func analyseLine(line string) int {
 
 }
 
-func main() {
+func Part_Two() int {
 
 	// test := "onetwooneonef33 33"
 
 	// fmt.Println(analyseLine(test))
 
-	file, err := os.Open("input.txt")
+	file, err := os.Open("part_one/input.txt")
 	if err != nil {
 		fmt.Println("Error opening file :", err)
-		return
+		return 0
 	}
 	defer file.Close()
 
@@ -184,7 +184,6 @@ func main() {
 		line := scanner.Text()
 
 		result += analyseLine(line)
-		fmt.Println(analyseLine(line))
 	}
-	fmt.Println(result)
+	return result
 }
