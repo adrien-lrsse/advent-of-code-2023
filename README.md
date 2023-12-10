@@ -1,6 +1,7 @@
-# advent-of-code-2023
+# Advent of Code 2023 in Go
 
-https://adventofcode.com/2023/ 
+https://adventofcode.com/2023/
+My personal answer to the problems of the 2023 aoc
 
 ### Day 1 : *Trebuchet?!*
 
