@@ -122,7 +122,7 @@ PASS
 ok  	day6	3.598s
 ```
 
-### Day 7 : Camel Cards
+### Day 7 : *Camel Cards*
 
 ```text
 Part One :
@@ -142,7 +142,7 @@ PASS
 ok  	day7	2.602s
 ```
 
-### Day 8 : Haunted Wasteland
+### Day 8 : *Haunted Wasteland*
 
 ```text
 Part One :
@@ -162,7 +162,7 @@ PASS
 ok  	day8	3.126s
 ```
 
-### Day 9 : Mirage Maintenance
+### Day 9 : *Mirage Maintenance*
 
 ```text
 Part One :
@@ -181,4 +181,24 @@ Result :  928 (in 1.224864ms )
  PASS
  ok  	day9	2.559s
  ```
+
+### Day 10 : *Pipe Maze*
+
+```text
+Part One :
+Result :  6890  (in 600.429µs )
+Part Two :
+Result :  453 (in 493.570276ms )
+```
+
+```text
+goos: linux
+goarch: amd64
+pkg: day10
+cpu: Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
+BenchmarkPartOne-8   	    2364	    481472 ns/op
+BenchmarkPartTwo-8   	       3	 497414184 ns/op
+PASS
+ok  	day10	4.176s
+```
 
