@@ -5,89 +5,59 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"regexp"
 )
 
 type Coord struct {
 	i, j int
 }
 
-func constructExtandedUniverse(input string) ([][]rune, []int, []int) {
+func constructExtandedUniverse(input string) ([]Coord, []int, []int) {
 	file, err := os.Open(input)
 	if err != nil {
 		fmt.Println("Error opening file :", err)
-		return [][]rune{}, []int{}, []int{}
+		return []Coord{}, []int{}, []int{}
 	}
 	defer file.Close()
-	var universeExtracted [][]rune
 	scanner := bufio.NewScanner(file)
 
-	var ligneAjoute []int
+	var hashtags []Coord
+	var ligne []int
 	ind := 0
+	initilisation := false
+	var colonneBool []bool
 	for scanner.Scan() {
 		line := scanner.Text()
-		pattern := "^\\.+$"
-		match, err := regexp.MatchString(pattern, line)
-		if err != nil {
-			// Gérer l'erreur si la syntaxe de l'expression régulière est incorrecte
-			fmt.Println("Erreur dans l'expression régulière:", err)
-			return [][]rune{}, []int{}, []int{}
+		if !initilisation {
+			colonneBool = make([]bool, len(line))
+			initilisation = true
 		}
-		if match {
-			universeExtracted = append(universeExtracted, []rune(line))
-			ligneAjoute = append(ligneAjoute, ind)
-		} else {
-			universeExtracted = append(universeExtracted, []rune(line))
+		isStar := true
+		for index, caractere := range line {
+			if caractere == '#' {
+				hashtags = append(hashtags, Coord{ind, index})
+				colonneBool[index] = true
+				isStar = false
+			}
 		}
+		if isStar {
+			ligne = append(ligne, ind)
+		}
+
 		ind++
 	}
 
-	allColonneareStars := true
-	var colonneAAjouter []int
-	for i := 0; i < len(universeExtracted[0]); i++ {
-		for j := 0; j < len(universeExtracted); j++ {
-			if universeExtracted[j][i] != '.' {
-				allColonneareStars = false
-			}
-		}
-		if allColonneareStars {
-			colonneAAjouter = append(colonneAAjouter, i)
-		} else {
-			allColonneareStars = true
+	var colonne []int
+	for i := 0; i < len(colonneBool); i++ {
+		if !colonneBool[i] {
+			colonne = append(colonne, i)
 		}
 	}
+	return hashtags, ligne, colonne
 
-	return universeExtracted, ligneAjoute, colonneAAjouter
-}
-
-func findAllHastag(universe [][]rune) []Coord {
-	var result []Coord
-	for i := 0; i < len(universe); i++ {
-		for j := 0; j < len(universe[i]); j++ {
-			if universe[i][j] == '#' {
-				result = append(result, Coord{i, j})
-			}
-		}
-	}
-	return result
 }
 
 func findOptDistance(a Coord, b Coord, ligne []int, colonne []int) int {
 	return int(math.Abs(float64(a.i-b.i))) + quantityOfLine(a, b, ligne)*999999 + int(math.Abs(float64(a.j-b.j))) + quantityOfColonne(a, b, colonne)*999999
-}
-
-func sortCoords(coords []Coord) []Coord {
-	n := len(coords)
-	for i := 0; i < n-1; i++ {
-		for j := 0; j < n-i-1; j++ {
-			if coords[j].i > coords[j+1].i || (coords[j].i == coords[j+1].i && coords[j].j > coords[j+1].j) {
-				// Échange des éléments si dans le mauvais ordre
-				coords[j], coords[j+1] = coords[j+1], coords[j]
-			}
-		}
-	}
-
-	return coords
 }
 
 func quantityOfLine(a Coord, b Coord, list []int) int {
@@ -138,18 +108,14 @@ func quantityOfColonne(a Coord, b Coord, list []int) int {
 }
 
 func Part_Two() int {
-	universe, ligne, colonne := constructExtandedUniverse("input.txt")
-
-	coords := findAllHastag(universe)
-
-	coords = sortCoords(coords)
+	hashtags, ligne, colonne := constructExtandedUniverse("input.txt")
 
 	result := 0
 
-	for i := 0; i < len(coords); i++ {
-		for j := i + 1; j < len(coords); j++ {
+	for i := 0; i < len(hashtags); i++ {
+		for j := i + 1; j < len(hashtags); j++ {
 			//fmt.Println(coords[i], coords[j], findOptDistance(coords[i], coords[j], ligne, colonne))
-			result += findOptDistance(coords[i], coords[j], ligne, colonne)
+			result += findOptDistance(hashtags[i], hashtags[j], ligne, colonne)
 		}
 	}
 
