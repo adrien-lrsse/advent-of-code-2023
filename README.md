@@ -202,3 +202,23 @@ PASS
 ok  	day10	4.176s
 ```
 
+ ### Day 11 : *Cosmic Expansion*
+
+```text
+Part One :
+Result :  9521776  (in 1.838362ms )
+Part Two :
+Result :  553224415344 (in 5.595117ms )
+```
+
+```text
+goos: linux
+goarch: amd64
+pkg: day11
+cpu: Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
+BenchmarkPartOne-8   	     829	   1589518 ns/op
+BenchmarkPartTwo-8   	     206	   5638059 ns/op
+PASS
+ok  	day11	3.218s
+```
+
