@@ -3,12 +3,19 @@ package part_one
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 )
 
 type Coord struct {
 	i, j int
+}
+
+func abs(a int) int {
+	if a > 0 {
+		return a
+	} else {
+		return -a
+	}
 }
 
 func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
@@ -59,15 +66,15 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
 }
 
 func findOptDistance(a Coord, b Coord, ligne []int, colonne []int) int {
-	return int(math.Abs(float64(a.i-b.i))) + quantityOfLine(a, b, ligne)*1 + int(math.Abs(float64(a.j-b.j))) + quantityOfColonne(a, b, colonne)*1
+	return abs(a.i-b.i) + quantityOfLine(a, b, ligne)*1 + abs(a.j-b.j) + quantityOfColonne(a, b, colonne)*1
 }
 
 func quantityOfLine(a Coord, b Coord, list []int) int {
-	return int(math.Abs(float64(list[a.i] - list[b.i])))
+	return abs(list[a.i] - list[b.i])
 }
 
 func quantityOfColonne(a Coord, b Coord, list []int) int {
-	return int(math.Abs(float64(list[a.j] - list[b.j])))
+	return abs(list[a.j] - list[b.j])
 }
 
 func Part_One() int {

@@ -3,7 +3,6 @@ package part_two
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 )
 
@@ -11,11 +10,11 @@ type Coord struct {
 	i, j int
 }
 
-func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
+func constructExtandedUniverse(input string) ([]Coord, []int, []int) {
 	file, err := os.Open(input)
 	if err != nil {
 		fmt.Println("Error opening file :", err)
-		return []Coord{}, []int{}, []int{}, 0, 0
+		return []Coord{}, []int{}, []int{}
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -23,7 +22,8 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
 	var hashtags []Coord
 	var ligne []int
 	ind := 0
-	line_size := 0
+	countEmptyLine := 0
+	countEmptyColonne := 0
 	initilisation := false
 	var colonneBool []bool
 	for scanner.Scan() {
@@ -31,7 +31,6 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
 		if !initilisation {
 			colonneBool = make([]bool, len(line))
 			initilisation = true
-			line_size = len(line)
 		}
 		isStar := true
 		for index, caractere := range line {
@@ -42,8 +41,9 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
 			}
 		}
 		if isStar {
-			ligne = append(ligne, ind)
+			countEmptyLine++
 		}
+		ligne = append(ligne, countEmptyLine)
 
 		ind++
 	}
@@ -51,54 +51,39 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
 	var colonne []int
 	for i := 0; i < len(colonneBool); i++ {
 		if !colonneBool[i] {
-			colonne = append(colonne, i)
+			countEmptyColonne++
 		}
-	}
-	return hashtags, ligne, colonne, line_size, ind
+		colonne = append(colonne, countEmptyColonne)
 
+	}
+	return hashtags, ligne, colonne
+
+}
+
+func abs(a int) int {
+	if a > 0 {
+		return a
+	} else {
+		return -a
+	}
 }
 
 func findOptDistance(a Coord, b Coord, ligne []int, colonne []int) int {
-	return int(math.Abs(float64(a.i-b.i))) + quantityOfLine(a, b, ligne)*999999 + int(math.Abs(float64(a.j-b.j))) + quantityOfColonne(a, b, colonne)*999999
+	return abs(a.i-b.i) + quantityOfLine(a, b, ligne)*999999 + abs(a.j-b.j) + quantityOfColonne(a, b, colonne)*999999
 }
 
 func quantityOfLine(a Coord, b Coord, list []int) int {
-	return int(math.Abs(float64(list[a.i] - list[b.i])))
+	return abs(list[a.i] - list[b.i])
 }
 
 func quantityOfColonne(a Coord, b Coord, list []int) int {
-	return int(math.Abs(float64(list[a.j] - list[b.j])))
+	return abs(list[a.j] - list[b.j])
 }
 
 func Part_Two() int {
-	hashtags, ligne, colonne, col_size, line_size := constructExtandedUniverse("input.txt")
+	hashtags, lineTreated, colonneTreated := constructExtandedUniverse("input.txt")
 
 	result := 0
-
-	lineTreated := make([]int, line_size)
-	emptyCount := 0
-	checkeurEmpty := 0
-	for i := 0; i < len(lineTreated); i++ {
-		if checkeurEmpty < len(ligne) {
-			if ligne[checkeurEmpty] == i {
-				emptyCount++
-				checkeurEmpty++
-			}
-		}
-		lineTreated[i] = emptyCount
-	}
-	colonneTreated := make([]int, col_size)
-	emptyCount = 0
-	checkeurEmpty = 0
-	for i := 0; i < len(colonneTreated); i++ {
-		if checkeurEmpty < len(colonne) {
-			if colonne[checkeurEmpty] == i {
-				emptyCount++
-				checkeurEmpty++
-			}
-		}
-		colonneTreated[i] = emptyCount
-	}
 
 	for i := 0; i < len(hashtags); i++ {
 		for j := i + 1; j < len(hashtags); j++ {
