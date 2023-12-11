@@ -11,11 +11,11 @@ type Coord struct {
 	i, j int
 }
 
-func constructExtandedUniverse(input string) ([]Coord, []int, []int) {
+func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
 	file, err := os.Open(input)
 	if err != nil {
 		fmt.Println("Error opening file :", err)
-		return []Coord{}, []int{}, []int{}
+		return []Coord{}, []int{}, []int{}, 0, 0
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -23,6 +23,7 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int) {
 	var hashtags []Coord
 	var ligne []int
 	ind := 0
+	line_size := 0
 	initilisation := false
 	var colonneBool []bool
 	for scanner.Scan() {
@@ -30,6 +31,7 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int) {
 		if !initilisation {
 			colonneBool = make([]bool, len(line))
 			initilisation = true
+			line_size = len(line)
 		}
 		isStar := true
 		for index, caractere := range line {
@@ -52,7 +54,7 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int) {
 			colonne = append(colonne, i)
 		}
 	}
-	return hashtags, ligne, colonne
+	return hashtags, ligne, colonne, line_size, ind
 
 }
 
@@ -61,61 +63,47 @@ func findOptDistance(a Coord, b Coord, ligne []int, colonne []int) int {
 }
 
 func quantityOfLine(a Coord, b Coord, list []int) int {
-	res := 0
-	if a.i < b.i {
-		for i := 0; i < len(list); i++ {
-			if a.i < list[i] && b.i > list[i] {
-				res++
-			}
-		}
-		//fmt.Println("Ligne : ", res)
-		return res
-	} else if a.i > b.i {
-		for i := 0; i < len(list); i++ {
-			if b.i < list[i] && a.i > list[i] {
-				res++
-			}
-		}
-		//fmt.Println("Ligne : ", res)
-		return res
-	} else {
-		return 0
-	}
-
+	return int(math.Abs(float64(list[a.i] - list[b.i])))
 }
 
 func quantityOfColonne(a Coord, b Coord, list []int) int {
-	res := 0
-	if a.j < b.j {
-		for i := 0; i < len(list); i++ {
-			if a.j < list[i] && b.j > list[i] {
-				res++
-			}
-		}
-		//fmt.Println("Colonne : ", res)
-		return res
-	} else if a.j > b.j {
-		for i := 0; i < len(list); i++ {
-			if b.j < list[i] && a.j > list[i] {
-				res++
-			}
-		}
-		//fmt.Println("Colonne : ", res)
-		return res
-	} else {
-		return 0
-	}
+	return int(math.Abs(float64(list[a.j] - list[b.j])))
 }
 
 func Part_Two() int {
-	hashtags, ligne, colonne := constructExtandedUniverse("input.txt")
+	hashtags, ligne, colonne, col_size, line_size := constructExtandedUniverse("input.txt")
 
 	result := 0
+
+	lineTreated := make([]int, line_size)
+	emptyCount := 0
+	checkeurEmpty := 0
+	for i := 0; i < len(lineTreated); i++ {
+		if checkeurEmpty < len(ligne) {
+			if ligne[checkeurEmpty] == i {
+				emptyCount++
+				checkeurEmpty++
+			}
+		}
+		lineTreated[i] = emptyCount
+	}
+	colonneTreated := make([]int, col_size)
+	emptyCount = 0
+	checkeurEmpty = 0
+	for i := 0; i < len(colonneTreated); i++ {
+		if checkeurEmpty < len(colonne) {
+			if colonne[checkeurEmpty] == i {
+				emptyCount++
+				checkeurEmpty++
+			}
+		}
+		colonneTreated[i] = emptyCount
+	}
 
 	for i := 0; i < len(hashtags); i++ {
 		for j := i + 1; j < len(hashtags); j++ {
 			//fmt.Println(coords[i], coords[j], findOptDistance(coords[i], coords[j], ligne, colonne))
-			result += findOptDistance(hashtags[i], hashtags[j], ligne, colonne)
+			result += findOptDistance(hashtags[i], hashtags[j], lineTreated, colonneTreated)
 		}
 	}
 

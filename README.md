@@ -207,9 +207,9 @@ ok  	day10	4.176s
 
 ```text
 Part One :
-Result :  9521776  (in 1.838362ms )
+Result :  9521776  (in 1.113304ms )
 Part Two :
-Result :  553224415344 (in 5.595117ms )
+Result :  553224415344 (in 1.039473ms )
 ```
 
 ```text
@@ -217,9 +217,9 @@ goos: linux
 goarch: amd64
 pkg: day11
 cpu: Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
-BenchmarkPartOne-8   	     829	   1589518 ns/op
-BenchmarkPartTwo-8   	     206	   5638059 ns/op
+BenchmarkPartOne-8   	    1203	   1047034 ns/op
+BenchmarkPartTwo-8   	    1160	   1019001 ns/op
 PASS
-ok  	day11	3.218s
+ok  	day11	2.651s
 ```
 
