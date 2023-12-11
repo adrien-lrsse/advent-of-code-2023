@@ -1,44 +1,26 @@
 package part_one
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+	"bytes"
 )
 
 type Coord struct {
 	i, j int
 }
 
-func abs(a int) int {
-	if a > 0 {
-		return a
-	} else {
-		return -a
-	}
-}
-
-func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
-	file, err := os.Open(input)
-	if err != nil {
-		fmt.Println("Error opening file :", err)
-		return []Coord{}, []int{}, []int{}, 0, 0
-	}
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
+func constructExtandedUniverse(input []byte) ([]Coord, []int, []int) {
+	lines := bytes.Split(input, []byte("\n"))
 
 	var hashtags []Coord
 	var ligne []int
-	ind := 0
-	line_size := 0
+	countEmptyLine := 0
+	countEmptyColonne := 0
 	initilisation := false
 	var colonneBool []bool
-	for scanner.Scan() {
-		line := scanner.Text()
+	for ind, line := range lines {
 		if !initilisation {
 			colonneBool = make([]bool, len(line))
 			initilisation = true
-			line_size = len(line)
 		}
 		isStar := true
 		for index, caractere := range line {
@@ -49,8 +31,9 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
 			}
 		}
 		if isStar {
-			ligne = append(ligne, ind)
+			countEmptyLine++
 		}
+		ligne = append(ligne, countEmptyLine)
 
 		ind++
 	}
@@ -58,11 +41,21 @@ func constructExtandedUniverse(input string) ([]Coord, []int, []int, int, int) {
 	var colonne []int
 	for i := 0; i < len(colonneBool); i++ {
 		if !colonneBool[i] {
-			colonne = append(colonne, i)
+			countEmptyColonne++
 		}
-	}
-	return hashtags, ligne, colonne, line_size, ind
+		colonne = append(colonne, countEmptyColonne)
 
+	}
+	return hashtags, ligne, colonne
+
+}
+
+func abs(a int) int {
+	if a > 0 {
+		return a
+	} else {
+		return -a
+	}
 }
 
 func findOptDistance(a Coord, b Coord, ligne []int, colonne []int) int {
@@ -77,35 +70,10 @@ func quantityOfColonne(a Coord, b Coord, list []int) int {
 	return abs(list[a.j] - list[b.j])
 }
 
-func Part_One() int {
-	hashtags, ligne, colonne, col_size, line_size := constructExtandedUniverse("input.txt")
+func Part_One(input []byte) int {
+	hashtags, lineTreated, colonneTreated := constructExtandedUniverse(input)
 
 	result := 0
-
-	lineTreated := make([]int, line_size)
-	emptyCount := 0
-	checkeurEmpty := 0
-	for i := 0; i < len(lineTreated); i++ {
-		if checkeurEmpty < len(ligne) {
-			if ligne[checkeurEmpty] == i {
-				emptyCount++
-				checkeurEmpty++
-			}
-		}
-		lineTreated[i] = emptyCount
-	}
-	colonneTreated := make([]int, col_size)
-	emptyCount = 0
-	checkeurEmpty = 0
-	for i := 0; i < len(colonneTreated); i++ {
-		if checkeurEmpty < len(colonne) {
-			if colonne[checkeurEmpty] == i {
-				emptyCount++
-				checkeurEmpty++
-			}
-		}
-		colonneTreated[i] = emptyCount
-	}
 
 	for i := 0; i < len(hashtags); i++ {
 		for j := i + 1; j < len(hashtags); j++ {

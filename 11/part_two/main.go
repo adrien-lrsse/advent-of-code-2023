@@ -1,33 +1,23 @@
 package part_two
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+	"bytes"
 )
 
 type Coord struct {
 	i, j int
 }
 
-func constructExtandedUniverse(input string) ([]Coord, []int, []int) {
-	file, err := os.Open(input)
-	if err != nil {
-		fmt.Println("Error opening file :", err)
-		return []Coord{}, []int{}, []int{}
-	}
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
+func constructExtandedUniverse(input []byte) ([]Coord, []int, []int) {
+	lines := bytes.Split(input, []byte("\n"))
 
 	var hashtags []Coord
 	var ligne []int
-	ind := 0
 	countEmptyLine := 0
 	countEmptyColonne := 0
 	initilisation := false
 	var colonneBool []bool
-	for scanner.Scan() {
-		line := scanner.Text()
+	for ind, line := range lines {
 		if !initilisation {
 			colonneBool = make([]bool, len(line))
 			initilisation = true
@@ -80,8 +70,8 @@ func quantityOfColonne(a Coord, b Coord, list []int) int {
 	return abs(list[a.j] - list[b.j])
 }
 
-func Part_Two() int {
-	hashtags, lineTreated, colonneTreated := constructExtandedUniverse("input.txt")
+func Part_Two(input []byte) int {
+	hashtags, lineTreated, colonneTreated := constructExtandedUniverse(input)
 
 	result := 0
 

@@ -8,12 +8,12 @@ import (
 
 func BenchmarkPartOne(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		part_one.Part_One()
+		part_one.Part_One(input)
 	}
 }
 
 func BenchmarkPartTwo(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		part_two.Part_Two()
+		part_two.Part_Two(input)
 	}
 }
