@@ -223,3 +223,45 @@ PASS
 ok  	day11	2.561s
 ```
 
+### Day 12 : *Hot Springs*
+
+*No running for part 2 - it's a good day*
+
+```text
+Part One :
+Result :  8075  (in 2.252762281s )
+Part Two :
+Result :  0 (in 1.318µs )
+```
+
+```text
+goos: linux
+goarch: amd64
+pkg: day12
+cpu: Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
+BenchmarkPartOne-8   	       1	2191386342 ns/op
+BenchmarkPartTwo-8   	1000000000	         0.4177 ns/op
+PASS
+ok  	day12	2.663s
+```
+
+### Day 15 : *Lens Library* 
+
+```text
+Part One :
+Result :  1320  (in 42.356µs )
+Part Two :
+Result :  271384 (in 1.276515ms )
+```
+
+```text
+goos: linux
+goarch: amd64
+pkg: day15
+cpu: Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
+BenchmarkPartOne-8   	    7357	    151483 ns/op
+BenchmarkPartTwo-8   	     986	   1208831 ns/op
+PASS
+ok  	day15	2.450s
+```
+
